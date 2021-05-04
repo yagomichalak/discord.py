@@ -44,6 +44,7 @@ if TYPE_CHECKING:
     from .types import (
         interactions,
         invite,
+        threads,
     )
 
     T = TypeVar('T')
@@ -729,7 +730,7 @@ class HTTPClient:
         name: str,
         auto_archive_duration: int,
         type: int,
-    ):
+    ) -> Response[threads.Thread]:
         payload = {
             'name': name,
             'auto_archive_duration': auto_archive_duration,
@@ -748,7 +749,7 @@ class HTTPClient:
         name: str,
         auto_archive_duration: int,
         type: int,
-    ):
+    ) -> Response[threads.Thread]:
         payload = {
             'name': name,
             'auto_archive_duration': auto_archive_duration,
@@ -763,7 +764,7 @@ class HTTPClient:
 
     def add_user_to_thread(self, channel_id: int, user_id: int):
         return self.request(
-            Route('POST', '/channels/{channel_id}/thread-members/{user_id}', channel_id=channel_id, user_id=user_id)
+            Route('PUT', '/channels/{channel_id}/thread-members/{user_id}', channel_id=channel_id, user_id=user_id)
         )
 
     def leave_thread(self, channel_id: int):
@@ -773,7 +774,9 @@ class HTTPClient:
         route = Route('DELETE', '/channels/{channel_id}/thread-members/{user_id}', channel_id=channel_id, user_id=user_id)
         return self.request(route)
 
-    def get_public_archived_threads(self, channel_id: int, before=None, limit: int = 50):
+    def get_public_archived_threads(
+        self, channel_id: int, before=None, limit: int = 50
+    ) -> Response[threads.ThreadPaginationPayload]:
         route = Route('GET', '/channels/{channel_id}/threads/archived/public', channel_id=channel_id)
 
         params = {}
@@ -782,7 +785,9 @@ class HTTPClient:
         params['limit'] = limit
         return self.request(route, params=params)
 
-    def get_private_archived_threads(self, channel_id: int, before=None, limit: int = 50):
+    def get_private_archived_threads(
+        self, channel_id: int, before=None, limit: int = 50
+    ) -> Response[threads.ThreadPaginationPayload]:
         route = Route('GET', '/channels/{channel_id}/threads/archived/private', channel_id=channel_id)
 
         params = {}
@@ -791,13 +796,23 @@ class HTTPClient:
         params['limit'] = limit
         return self.request(route, params=params)
 
-    def get_joined_private_archived_threads(self, channel_id, before=None, limit: int = 50):
+    def get_joined_private_archived_threads(
+        self, channel_id: int, before=None, limit: int = 50
+    ) -> Response[threads.ThreadPaginationPayload]:
         route = Route('GET', '/channels/{channel_id}/users/@me/threads/archived/private', channel_id=channel_id)
         params = {}
         if before:
             params['before'] = before
         params['limit'] = limit
         return self.request(route, params=params)
+
+    def get_active_threads(self, channel_id: int) -> Response[threads.ThreadPaginationPayload]:
+        route = Route('GET', '/channels/{channel_id}/threads/active', channel_id=channel_id)
+        return self.request(route)
+
+    def get_thread_members(self, channel_id: int) -> Response[List[threads.ThreadMember]]:
+        route = Route('GET', '/channels/{channel_id}/thread-members', channel_id=channel_id)
+        return self.request(route)
 
     # Webhook management
 
@@ -1395,7 +1410,9 @@ class HTTPClient:
         )
         return self.request(r)
 
-    def get_guild_application_command_permissions(self, application_id, guild_id) -> Response[List[interactions.GuildApplicationCommandPermissions]]:
+    def get_guild_application_command_permissions(
+        self, application_id, guild_id
+    ) -> Response[List[interactions.GuildApplicationCommandPermissions]]:
         r = Route(
             'GET',
             '/applications/{application_id}/guilds/{guild_id}/commands/permissions',
@@ -1404,7 +1421,9 @@ class HTTPClient:
         )
         return self.request(r)
 
-    def get_application_command_permissions(self, application_id, guild_id, command_id) -> Response[interactions.GuildApplicationCommandPermissions]:
+    def get_application_command_permissions(
+        self, application_id, guild_id, command_id
+    ) -> Response[interactions.GuildApplicationCommandPermissions]:
         r = Route(
             'GET',
             '/applications/{application_id}/guilds/{guild_id}/commands/{command_id}/permissions',
