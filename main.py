@@ -38,7 +38,7 @@ async def test(ctx) -> None:
 
 
 @client.event
-async def on_interaction_update(message, member, component):
+async def on_interaction_update(message, member, component, response):
     print('NORMAL!')
     print('message=', message)
     print()
@@ -48,11 +48,14 @@ async def on_interaction_update(message, member, component):
 
 
 @client.event
-async def on_raw_interaction_update(payload, user):
-    print('RAW!')
-    print('payload=', payload)
-    print()
-    print('user=', user)
+async def on_raw_interaction_update(payload, user, component, response):
+    # print('RAW!')
+    # print('payload=', payload)
+    # print()
+    # print('user=', user)
+    # print(itoken)
+
+    component.success(response)
 
 @client.command()
 async def cc(ctx) -> None:
@@ -61,7 +64,7 @@ async def cc(ctx) -> None:
     for i in range(5):
         component = discord.Component()
         for ii in range(5):
-            component.add_button(index=0, type=2, label=f"Btn {ii+1}", style=1, custom_id=f"btn{i+1}-r{ii+1}")
+            component.add_button(label=f"Btn {ii+1}", style=1, custom_id=f"btn{i+1}-r{ii+1}")
         components.append(component)
 
 

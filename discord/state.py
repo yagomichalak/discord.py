@@ -54,6 +54,7 @@ from . import utils
 from .flags import Intents, MemberCacheFlags
 from .object import Object
 from .invite import Invite
+from .components import Component
 
 class ChunkRequest:
     def __init__(self, guild_id, loop, resolver, *, cache=True):
@@ -1134,22 +1135,37 @@ class ConnectionState:
 
         guild_id = int(data['guild_id'])
         guild = self._get_guild(guild_id)
-
+        response = {'id': data['id'], 'token': data['token']}
         member = Member(guild=guild, data=data['member'], state=self)
 
         message_id = int(data['message']['id'])
         message = self._get_message(message_id)
+        custom_id = data['data']['custom_id']
+        action_rows = data['message']['components']
+
+        def get_key(custom_id):
+            for action_row in action_rows:
+                for button in action_row['components']:
+                    if custom_id == button['custom_id']:
+                        return button
+    
+            return None
+
+        component = Component()
+        button_data = get_key(custom_id)
+
+        # return
+        component.add_button(**button_data)
 
         if message:
-            component = data['data']
-            self.dispatch('interaction_update', message, member, component)
+            self.dispatch('interaction_update', message, member, component, response)
         else:
             raw = RawMessageUpdateEvent(data)
             message = self._get_message(raw.message_id)
             if message:
-                self.dispatch('raw_interaction_update', message, member)
+                self.dispatch('raw_interaction_update', message, member, component, response)
             else:
-                self.dispatch('raw_interaction_update', raw.data['message'], member)
+                self.dispatch('raw_interaction_update', raw.data['message'], member, component, response)
 
 
  

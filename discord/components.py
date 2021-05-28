@@ -4,6 +4,8 @@ import datetime
 
 from . import utils
 from typing import Any, Dict, List, Union
+import requests
+import json
 
 
 class Component:
@@ -16,7 +18,7 @@ class Component:
         
         return self.__components
 
-    def add_button(self, *, index, type, label, style, custom_id, emoji = None) -> object:
+    def add_button(self, *, label, style, custom_id, emoji = None, type: int = 2) -> object:
 
         """Adds a button to the component object.
 
@@ -40,7 +42,7 @@ class Component:
         """
 
         button = {
-            'type': type, 'label': label, 'style': style, 'custom_id': custom_id, 'emoji': emoji
+            'type': 2, 'label': label, 'style': style, 'custom_id': custom_id, 'emoji': emoji
         }
 
         try:
@@ -85,8 +87,25 @@ class Component:
         return self
 
     def clear_buttons(self):
-        """Removes all buttons from this component."""
+        """ Removes all buttons from the component."""
+
         try:
             self.__components['components'].clear()
         except AttributeError:
             self.__components['components'] = [] 
+
+
+    def success(self, response):
+        """ Marks the interaction as a success.
+        :param The response data. """
+
+        url = f"https://discord.com/api/v8/interactions/{response['id']}/{response['token']}/callback"
+
+        json = {
+            "type": 4,
+            "data": {
+                "content": "Congrats on sending your command!",
+                "flags": 64
+            }
+        }
+        r = requests.post(url, json=json)
