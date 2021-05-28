@@ -42,7 +42,7 @@ class Component:
         """
 
         button = {
-            'type': 2, 'label': label, 'style': style, 'custom_id': custom_id, 'emoji': emoji
+            'type': 2, 'label': label, 'style': style, 'custom_id': custom_id, 'emoji': {'name': emoji}
         }
 
         try:
