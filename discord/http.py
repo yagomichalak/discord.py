@@ -37,8 +37,6 @@ from .errors import HTTPException, Forbidden, NotFound, LoginFailure, DiscordSer
 from .gateway import DiscordClientWebSocketResponse
 from . import __version__, utils
 
-from pprint import pprint
-
 log = logging.getLogger(__name__)
 
 async def json_or_text(response):
@@ -365,7 +363,6 @@ class HTTPClient:
             payload['embed'] = embed
         
         if components:
-            # pprint([component.components for component in components])
            payload['components'] = [component.components for component in components]
 
         if nonce:

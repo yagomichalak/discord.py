@@ -1127,6 +1127,33 @@ class ConnectionState:
     def create_message(self, *, channel, data):
         return Message(state=self, channel=channel, data=data)
 
+           
+    def parse_interaction_create(self, data):
+
+        # rich interface here
+
+        guild_id = int(data['guild_id'])
+        guild = self._get_guild(guild_id)
+
+        member = Member(guild=guild, data=data['member'], state=self)
+
+        message_id = int(data['message']['id'])
+        message = self._get_message(message_id)
+
+        if message:
+            component = data['data']
+            self.dispatch('interaction_update', message, member, component)
+        else:
+            raw = RawMessageUpdateEvent(data)
+            message = self._get_message(raw.message_id)
+            if message:
+                self.dispatch('raw_interaction_update', message, member)
+            else:
+                self.dispatch('raw_interaction_update', raw.data['message'], member)
+
+
+ 
+
 class AutoShardedConnectionState(ConnectionState):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1250,7 +1277,3 @@ class AutoShardedConnectionState(ConnectionState):
     def parse_resumed(self, data):
         self.dispatch('resumed')
         self.dispatch('shard_resumed', data['__shard_id__'])
-
-    def parse_button_click(self, data):
-        print(data)
-        self.dispatch('button_click')

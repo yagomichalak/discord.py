@@ -3,6 +3,7 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 load_dotenv()
+from pprint import pprint
 
 client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 token = os.getenv('TOKEN')
@@ -20,7 +21,7 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_button_click(components):
-    
+
     # print('opa')
     # print(components)
     pass
@@ -28,10 +29,30 @@ async def on_button_click(components):
 @client.command()
 async def test(ctx) -> None:
     await ctx.send(f"Command successfully tested!")
+# @client.event
+# async def on_socket_response(data):
+    
+#     if data['t'] != 'INTERACTION_CREATE':
+#         return
+
+
 
 @client.event
-async def on_message_edit(before, after):
-    print(before, after)
+async def on_interaction_update(message, member, component):
+    print('NORMAL!')
+    print('message=', message)
+    print()
+    print('member=', member)
+    print()
+    print('component=', component)
+
+
+@client.event
+async def on_raw_interaction_update(payload, user):
+    print('RAW!')
+    print('payload=', payload)
+    print()
+    print('user=', user)
 
 @client.command()
 async def cc(ctx) -> None:
@@ -43,14 +64,21 @@ async def cc(ctx) -> None:
             component.add_button(index=0, type=2, label=f"Btn {ii+1}", style=1, custom_id=f"btn{i+1}-r{ii+1}")
         components.append(component)
 
-    
-    client.dispatch("button_click", components)
+
+    # client.dispatch("button_click", components)
 
     opa = await ctx.send(embed=discord.Embed(title='hey'), components=components)
-    print(opa.embeds)
-    print()
-    print(opa.components)
+    # print(opa.embeds)
+    # print()
+    # print(opa.components)
 
+@client.command()
+async def compo(ctx) -> None:
+
+    compo = discord.Component()
+    compo.add_button(index=0, type=2, label=f"Btn 1!", style=1, custom_id=f"btn_1_id")
+    compo.add_button(index=0, type=2, label=f"Btn 2!", style=1, custom_id=f"btn_2_id")
+    await ctx.send('something', components=[compo])
 
 
 # for filename in os.listdir('./cogs'):
