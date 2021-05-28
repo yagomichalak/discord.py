@@ -1151,21 +1151,17 @@ class ConnectionState:
     
             return None
 
-        component = Component()
-        button_data = get_key(custom_id)
-
-        # return
-        component.add_button(**button_data)
+        button = get_key(custom_id)
 
         if message:
-            self.dispatch('interaction_update', message, member, component, response)
+            self.dispatch('interaction_update', message, member, button, response)
         else:
             raw = RawMessageUpdateEvent(data)
             message = self._get_message(raw.message_id)
             if message:
-                self.dispatch('raw_interaction_update', message, member, component, response)
+                self.dispatch('raw_interaction_update', message, member, button, response)
             else:
-                self.dispatch('raw_interaction_update', raw.data['message'], member, component, response)
+                self.dispatch('raw_interaction_update', raw.data['message'], member, button, response)
 
 
  
