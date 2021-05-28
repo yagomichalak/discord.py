@@ -95,6 +95,19 @@ class Component:
             self.__components['components'] = [] 
 
 
+
+class Button:
+
+    # __slots__ = ('label', 'style', 'custom_id', 'emoji', 'type')
+
+    def __init__(self, label: str, style: int, custom_id: str, emoji: Dict[str, str] = None, type: int = 2) -> None:
+        self.label = label
+        self.style = style
+        self.custom_id = custom_id
+        self.emoji = emoji
+        self.type = type
+
+        
     def success(self, response):
         """ Marks the interaction as a success.
         :param The response data. """

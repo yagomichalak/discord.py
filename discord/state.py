@@ -54,7 +54,7 @@ from . import utils
 from .flags import Intents, MemberCacheFlags
 from .object import Object
 from .invite import Invite
-from .components import Component
+from .components import Button
 
 class ChunkRequest:
     def __init__(self, guild_id, loop, resolver, *, cache=True):
@@ -1151,7 +1151,8 @@ class ConnectionState:
     
             return None
 
-        button = get_key(custom_id)
+        button_data = get_key(custom_id)
+        button = Button(**button_data)
 
         if message:
             self.dispatch('interaction_update', message, member, button, response)
