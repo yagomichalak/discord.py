@@ -18,7 +18,7 @@ class Component:
         
         return self.__components
 
-    def add_button(self, *, label, style, custom_id, emoji = None, type: int = 2) -> object:
+    def add_button(self, *, style: int, custom_id: str, label: str = '', emoji: Dict[str, str] = None, type: int = 2) -> object:
 
         """Adds a button to the component object.
 
@@ -100,7 +100,7 @@ class Button:
 
     # __slots__ = ('label', 'style', 'custom_id', 'emoji', 'type')
 
-    def __init__(self, label: str, style: int, custom_id: str, emoji: Dict[str, str] = None, type: int = 2) -> None:
+    def __init__(self, style: int, custom_id: str, label: str = '', emoji: Dict[str, str] = None, type: int = 2) -> None:
         self.label = label
         self.style = style
         self.custom_id = custom_id
