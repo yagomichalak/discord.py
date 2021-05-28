@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
-token = 'ODM0NjAxNzg5MDE3Njg2MDI2.YIDRfA.QnMWzuAhtrkWZh2R9TKT9UBH4pk'
+token = os.getenv('TOKEN')
 
 @client.event
 async def on_ready():
