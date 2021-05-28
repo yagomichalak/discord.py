@@ -84,3 +84,10 @@ class Component:
                 setattr(self, '_' + attr, value)
 
         return self
+
+    def clear_buttons(self):
+        """Removes all buttons from this component."""
+        try:
+            self.__components['components'].clear()
+        except AttributeError:
+            self.__components['components'] = [] 
