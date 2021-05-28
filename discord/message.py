@@ -37,6 +37,7 @@ from .calls import CallMessage
 from .enums import MessageType, ChannelType, try_enum
 from .errors import InvalidArgument, ClientException, HTTPException
 from .embeds import Embed
+from .components import Component
 from .member import Member
 from .flags import MessageFlags
 from .file import File
@@ -453,6 +454,8 @@ class Message(Hashable):
         This is not stored long term within Discord's servers and is only used ephemerally.
     embeds: List[:class:`Embed`]
         A list of embeds the message has.
+    components: List[:class:`Component`]
+        A list of components the message has
     channel: Union[:class:`abc.Messageable`]
         The :class:`TextChannel` that the message was sent from.
         Could be a :class:`DMChannel` or :class:`GroupChannel` if it's a private message.
@@ -534,7 +537,7 @@ class Message(Hashable):
     """
 
     __slots__ = ('_edited_timestamp', 'tts', 'content', 'channel', 'webhook_id',
-                 'mention_everyone', 'embeds', 'id', 'mentions', 'author',
+                 'mention_everyone', 'embeds', 'components', 'id', 'mentions', 'author',
                  '_cs_channel_mentions', '_cs_raw_mentions', 'attachments',
                  '_cs_clean_content', '_cs_raw_channel_mentions', 'nonce', 'pinned',
                  'role_mentions', '_cs_raw_role_mentions', 'type', 'call', 'flags',
@@ -548,6 +551,7 @@ class Message(Hashable):
         self.reactions = [Reaction(message=self, data=d) for d in data.get('reactions', [])]
         self.attachments = [Attachment(data=a, state=self._state) for a in data['attachments']]
         self.embeds = [Embed.from_dict(a) for a in data['embeds']]
+        self.components = [Component.from_dict(a) for a in data['components']]
         self.application = data.get('application')
         self.activity = data.get('activity')
         self.channel = channel

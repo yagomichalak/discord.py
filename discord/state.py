@@ -1250,3 +1250,7 @@ class AutoShardedConnectionState(ConnectionState):
     def parse_resumed(self, data):
         self.dispatch('resumed')
         self.dispatch('shard_resumed', data['__shard_id__'])
+
+    def parse_button_click(self, data):
+        print(data)
+        self.dispatch('button_click')

@@ -37,6 +37,8 @@ from .errors import HTTPException, Forbidden, NotFound, LoginFailure, DiscordSer
 from .gateway import DiscordClientWebSocketResponse
 from . import __version__, utils
 
+from pprint import pprint
+
 log = logging.getLogger(__name__)
 
 async def json_or_text(response):
@@ -349,7 +351,7 @@ class HTTPClient:
 
         return self.request(Route('POST', '/users/@me/channels'), json=payload)
 
-    def send_message(self, channel_id, content, *, tts=False, embed=None, nonce=None, allowed_mentions=None, message_reference=None):
+    def send_message(self, channel_id, content, *, tts=False, embed=None, components=None, nonce=None, allowed_mentions=None, message_reference=None):
         r = Route('POST', '/channels/{channel_id}/messages', channel_id=channel_id)
         payload = {}
 
@@ -361,6 +363,10 @@ class HTTPClient:
 
         if embed:
             payload['embed'] = embed
+        
+        if components:
+            # pprint([component.components for component in components])
+           payload['components'] = [component.components for component in components]
 
         if nonce:
             payload['nonce'] = nonce
@@ -376,7 +382,7 @@ class HTTPClient:
     def send_typing(self, channel_id):
         return self.request(Route('POST', '/channels/{channel_id}/typing', channel_id=channel_id))
 
-    def send_files(self, channel_id, *, files, content=None, tts=False, embed=None, nonce=None, allowed_mentions=None, message_reference=None):
+    def send_files(self, channel_id, *, files, content=None, tts=False, embed=None, components=None, nonce=None, allowed_mentions=None, message_reference=None):
         r = Route('POST', '/channels/{channel_id}/messages', channel_id=channel_id)
         form = []
 
@@ -385,6 +391,11 @@ class HTTPClient:
             payload['content'] = content
         if embed:
             payload['embed'] = embed
+
+        if components:
+
+            payload['components'] = [component['component'] for component in components]
+
         if nonce:
             payload['nonce'] = nonce
         if allowed_mentions:
