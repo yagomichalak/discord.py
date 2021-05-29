@@ -18,7 +18,7 @@ class Component:
         
         return self.__components
 
-    def add_button(self, *, style: int, custom_id: str, label: str = '', emoji: Dict[str, str] = None, type: int = 2) -> object:
+    def add_button(self, *, style: int, custom_id: str, label: str = '', emoji: str = None, type: int = 2) -> object:
 
         """Adds a button to the component object.
 
@@ -27,22 +27,24 @@ class Component:
 
         Parameters
         -----------
-        index: :class:`int`
-            The index of the component in which the button will be inserted.
-        type: :class:`int`
-            The type of the button.
-        label: :class:`str`
-            The label for the button.
+
         style: :class:`int`
             The style of the button.
         custom_id: :class:`int`
             The custom ID for the button.
+        label: :class:`str`
+            The label for the button.
         emoji: :class:`str`
             The emoji for the button. [Optional]
+        type: :class:`int`
+            Type of component. (Default = 2)
         """
 
+        if emoji is not None:
+            emoji = {'name': emoji}
+
         button = {
-            'type': 2, 'label': label, 'style': style, 'custom_id': custom_id, 'emoji': {'name': emoji}
+            'type': 2, 'label': label, 'style': style, 'custom_id': custom_id, 'emoji': emoji
         }
 
         try:
