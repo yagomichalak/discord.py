@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+from discord.errors import HTTPException
 
 from . import utils
 from typing import Any, Dict, List, Union
@@ -18,7 +19,7 @@ class Component:
         
         return self.__components
 
-    def add_button(self, *, style: int, custom_id: str, label: str = '', emoji: str = None, type: int = 2) -> object:
+    def add_button(self, *, style: int, custom_id: str = '', label: str = '', url: str = '', emoji: str = None, type: int = 2, disabled: bool = False) -> object:
 
         """Adds a button to the component object.
 
@@ -31,20 +32,27 @@ class Component:
         style: :class:`int`
             The style of the button.
         custom_id: :class:`int`
-            The custom ID for the button.
+            The custom ID for the button. (Required/Optional)
         label: :class:`str`
             The label for the button.
+        url: :class:`str`
+            The redirect link for the button (Required/Optional)
         emoji: :class:`str`
             The emoji for the button. [Optional]
         type: :class:`int`
             Type of component. (Default = 2)
+        disabled: :class:`bool`
+            Whether the button is disabled. (Default = False)
         """
 
         if emoji is not None:
             emoji = {'name': emoji}
 
+        if (style in (1, 2, 3, 4) and not custom_id) or (style == 5 and not url) or (custom_id and url):
+            raise requests.HTTPError
+
         button = {
-            'type': 2, 'label': label, 'style': style, 'custom_id': custom_id, 'emoji': emoji
+            'type': 2, 'label': label, 'style': style, 'custom_id': custom_id, 'url': url, 'emoji': emoji, 'disabled': disabled
         }
 
         try:
@@ -100,14 +108,16 @@ class Component:
 
 class Button:
 
-    # __slots__ = ('label', 'style', 'custom_id', 'emoji', 'type')
+    # __slots__ = ('label', 'style', 'custom_id', 'url', 'emoji', 'type', 'disabled')
 
-    def __init__(self, style: int, custom_id: str, label: str = '', emoji: Dict[str, str] = None, type: int = 2) -> None:
+    def __init__(self, style: int, custom_id: str = '', label: str = '', url: str = '', emoji: Dict[str, str] = None, type: int = 2, disabled: bool = False) -> None:
         self.label = label
         self.style = style
         self.custom_id = custom_id
+        self.url = url
         self.emoji = emoji
         self.type = type
+        self.disabled = disabled
 
         
     def success(self, response):

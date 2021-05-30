@@ -64,7 +64,7 @@ async def cc(ctx) -> None:
     for i in range(5):
         component = discord.Component()
         for ii in range(5):
-            component.add_button(label=f"Btn {ii+1}", style=1, custom_id=f"btn{i+1}-r{ii+1}")
+            component.add_button(label=f"Btn {ii+1}", style=5, url="https://thelanguagesloth.com", emoji='🦥')
         components.append(component)
 
 
