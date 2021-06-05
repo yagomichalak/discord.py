@@ -8,7 +8,6 @@ import discord
 
 
 def convert_emoji_to_dict(emoji) -> Dict[str, Union[str, int]]:
-    print(emoji)
 
     emoji_dict = {}
     emoji = emoji.strip("<>")
@@ -66,8 +65,6 @@ class Component:
 
         if emoji is not None:
             emoji = convert_emoji_to_dict(emoji)
-            # emoji = {'name': emoji}
-            print(emoji)
 
         if (style in (1, 2, 3, 4) and not custom_id) or (style == 5 and not url) or (custom_id and url):
             raise requests.HTTPError
