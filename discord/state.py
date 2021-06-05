@@ -1135,7 +1135,7 @@ class ConnectionState:
 
         guild_id = int(data['guild_id'])
         guild = self._get_guild(guild_id)
-        response = {'id': data['id'], 'token': data['token']}
+        response = {'id': data['id'], 'token': data['token'], 'application_id': data['application_id']}
         member = Member(guild=guild, data=data['member'], state=self)
 
         message_id = int(data['message']['id'])

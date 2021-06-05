@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from pprint import pprint
+import asyncio
 
 client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 token = os.getenv('TOKEN')
@@ -31,31 +32,39 @@ async def test(ctx) -> None:
     await ctx.send(f"Command successfully tested!")
 # @client.event
 # async def on_socket_response(data):
-    
+
 #     if data['t'] != 'INTERACTION_CREATE':
 #         return
 
 
 
 @client.event
-async def on_interaction_update(message, member, component, response):
+async def on_interaction_update(message, member, button, response):
     print('NORMAL!')
     print('message=', message)
     print()
     print('member=', member)
     print()
-    print('component=', component)
+    print('button=', button)
+
+    print()
+    # button.ping(response)
+    button.defer(response)
+    await asyncio.sleep(2)
+    button.update_response(response, "opa opa")
+    # await message.edit(content='hey')
+    # button.update(response)
 
 
 @client.event
-async def on_raw_interaction_update(payload, user, component, response):
+async def on_raw_interaction_update(payload, user, button, response):
     # print('RAW!')
     # print('payload=', payload)
     # print()
     # print('user=', user)
     # print(itoken)
 
-    component.success(response)
+    button.success(response)
 
 @client.command()
 async def cc(ctx) -> None:
@@ -79,8 +88,8 @@ async def cc(ctx) -> None:
 async def compo(ctx) -> None:
 
     compo = discord.Component()
-    compo.add_button(index=0, type=2, label=f"Btn 1!", style=1, custom_id=f"btn_1_id")
-    compo.add_button(index=0, type=2, label=f"Btn 2!", style=1, custom_id=f"btn_2_id")
+    compo.add_button(label=f"Btn 1!", style=1, custom_id=f"btn_1_id")
+    compo.add_button(label=f"Btn 2!", style=1, custom_id=f"btn_2_id")
     await ctx.send('something', components=[compo])
 
 

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import datetime
+
+from requests.models import ContentDecodingError
 from discord.errors import HTTPException
 
 from . import utils
@@ -122,7 +124,7 @@ class Button:
         
     def success(self, response):
         """ Marks the interaction as a success.
-        :param The response data. """
+        :param response: The response data. """
 
         url = f"https://discord.com/api/v8/interactions/{response['id']}/{response['token']}/callback"
 
@@ -133,4 +135,59 @@ class Button:
                 "flags": 64
             }
         }
-        r = requests.post(url, json=json)
+        requests.post(url, json=json)
+
+    def defer(self, response):
+        """ Waits for 15 minutes maximum to answer the interaction.
+        :param response: The response data. """
+
+        url = f"https://discord.com/api/v8/interactions/{response['id']}/{response['token']}/callback"
+
+        json = {
+            "type": 5,
+            "data": {
+                "content": None,
+
+            }
+        }
+        requests.post(url, json=json)
+
+    def ping(self, response):
+        """ Waits for 15 minutes maximum to answer the interaction.
+        :param response: The response data. """
+
+        url = f"https://discord.com/api/v8/interactions/{response['id']}/{response['token']}/callback"
+
+        json = {
+            "type": 6,
+        }
+        requests.post(url, json=json)
+    
+    def update(self, response, content: str):
+        """ Edits the interaction's original message.
+        :param response: The response data. """
+
+        url = f"https://discord.com/api/v8/interactions/{response['id']}/{response['token']}/callback"
+
+        json = {
+            "type": 7,
+            "data": {
+                "content": content
+            }
+            
+        }
+        requests.post(url, json=json)
+
+    def update_response(self, response, content: str):
+        """ Edits the interaction's original message.
+        :param response: The response data. """
+
+        url = f"https://discord.com/api/v8/webhooks/{response['application_id']}/{response['token']}/messages/@original"
+
+        payload = {
+            "content": content
+            
+        }
+        requests.patch(url, data=payload)
+
+    
