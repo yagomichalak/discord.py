@@ -1,15 +1,32 @@
 from __future__ import annotations
 
-import datetime
-
-from requests.models import ContentDecodingError
-from discord.errors import HTTPException
-
 from . import utils
 from typing import Any, Dict, List, Union
 import requests
-import json
 
+import discord
+
+
+def convert_emoji_to_dict(emoji) -> Dict[str, Union[str, int]]:
+    print(emoji)
+
+    emoji_dict = {}
+    emoji = emoji.strip("<>")
+
+    emoji_parts = emoji.split(":", 2)
+
+    if len(emoji_parts) == 1:
+        emoji_dict['name'] = emoji_parts[0]
+
+    if len(emoji_parts) >= 2:
+        emoji_dict['name'] = emoji_parts[1]
+
+    if len(emoji_parts) >= 3:
+        emoji_dict['id'] = emoji_parts[2]
+
+        if emoji_parts[0] == 'a':
+            emoji_dict['animated'] = True
+    return emoji_dict
 
 class Component:
 
@@ -48,7 +65,9 @@ class Component:
         """
 
         if emoji is not None:
-            emoji = {'name': emoji}
+            emoji = convert_emoji_to_dict(emoji)
+            # emoji = {'name': emoji}
+            print(emoji)
 
         if (style in (1, 2, 3, 4) and not custom_id) or (style == 5 and not url) or (custom_id and url):
             raise requests.HTTPError

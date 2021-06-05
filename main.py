@@ -88,8 +88,9 @@ async def cc(ctx) -> None:
 async def compo(ctx) -> None:
 
     compo = discord.Component()
-    compo.add_button(label=f"Btn 1!", style=1, custom_id=f"btn_1_id")
-    compo.add_button(label=f"Btn 2!", style=1, custom_id=f"btn_2_id")
+    compo.add_button(label=f"Btn 1!", style=1, custom_id=f"btn_1_id", emoji="<:transmutated_sloth:839509433159385090>")
+    compo.add_button(label=f"Btn 2!", style=1, custom_id=f"btn_2_id", emoji="🧑‍🏫")
+    compo.add_button(label=f"Btn 3!", style=1, custom_id=f"btn_3_id", emoji="<a:hackerman:802354539184259082>")
     await ctx.send('something', components=[compo])
 
 
