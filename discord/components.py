@@ -132,7 +132,7 @@ class Button:
 
     # __slots__ = ('label', 'style', 'custom_id', 'url', 'emoji', 'type', 'disabled')
 
-    def __init__(self, style: int, custom_id: str = '', label: str = '', url: str = '', emoji: Dict[str, str] = None, type: int = 2, disabled: bool = False) -> None:
+    def __init__(self, style: int, custom_id: str = '', label: str = '', url: str = '', emoji: Dict[str, str] = None, type: int = 2, disabled: bool = False, hash: str = None) -> None:
         self.label = label
         self.style = style
         self.custom_id = custom_id
@@ -140,6 +140,7 @@ class Button:
         self.emoji = emoji
         self.type = type
         self.disabled = disabled
+        self.hash = hash
 
         
     def success(self, response):
