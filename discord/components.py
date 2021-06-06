@@ -37,6 +37,11 @@ class Component:
         
         return self.__components
 
+    @components.setter
+    def components(self, value: List[Dict[str, Union[int, str]]]) -> None:
+        
+        self.__components = value
+
     def add_button(self, *, style: int, custom_id: str = '', label: str = '', url: str = '', emoji: str = None, type: int = 2, disabled: bool = False) -> object:
 
         """Adds a button to the component object.
@@ -102,15 +107,14 @@ class Component:
 
         # fill in the basic fields
 
-        self.__components = {'type': 1, 'components': []}
+        self.components = {'type': 1, 'components': []}
 
-        for attr in ('buttons',):
-            try:
-                value = data[attr]
-            except KeyError:
-                continue
-            else:
-                setattr(self, '_' + attr, value)
+        try:
+            value = data['components']
+        except KeyError:
+            pass
+        else:
+            self.components['components'] = value
 
         return self
 

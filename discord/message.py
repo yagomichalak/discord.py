@@ -551,7 +551,7 @@ class Message(Hashable):
         self.reactions = [Reaction(message=self, data=d) for d in data.get('reactions', [])]
         self.attachments = [Attachment(data=a, state=self._state) for a in data['attachments']]
         self.embeds = [Embed.from_dict(a) for a in data['embeds']]
-        self.components = [Component.from_dict(a) for a in data['components']]
+        self.components = [Component.from_dict(component) for component in data['components']]
         self.application = data.get('application')
         self.activity = data.get('activity')
         self.channel = channel
@@ -1044,6 +1044,9 @@ class Message(Hashable):
         embed: Optional[:class:`Embed`]
             The new embed to replace the original with.
             Could be ``None`` to remove the embed.
+        embed: Optional[List[:class:`Component`]]
+            The new list of components to replace the original with.
+            Could be ``None`` to remove the components.
         suppress: :class:`bool`
             Whether to suppress embeds for the message. This removes
             all the embeds if set to ``True``. If set to ``False``
@@ -1087,6 +1090,14 @@ class Message(Hashable):
         else:
             if embed is not None:
                 fields['embed'] = embed.to_dict()
+
+        try:
+            components = fields['components']
+        except KeyError:
+            pass
+        else:
+            if components is not None:
+                fields['components'] = [component.components for component in components]
 
         try:
             suppress = fields.pop('suppress')
@@ -1521,6 +1532,9 @@ class PartialMessage(Hashable):
         embed: Optional[:class:`Embed`]
             The new embed to replace the original with.
             Could be ``None`` to remove the embed.
+        components: Optional[List[:class:`Component`]]
+            The new list of components to replace the original with.
+            Could be ``None`` to remove the components.
         suppress: :class:`bool`
             Whether to suppress embeds for the message. This removes
             all the embeds if set to ``True``. If set to ``False``
@@ -1569,6 +1583,16 @@ class PartialMessage(Hashable):
         else:
             if embed is not None:
                 fields['embed'] = embed.to_dict()
+
+        try:
+            print('brah')
+            components = fields['components']
+        except KeyError:
+            pass
+        else:
+            print('compoaoaah', components)
+            if components is not None:
+                fields['components'] = [component.components for component in fields['components']]
 
         try:
             suppress = fields.pop('suppress')

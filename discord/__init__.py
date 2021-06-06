@@ -50,7 +50,7 @@ from .reaction import Reaction
 from . import utils, opus, abc
 from .enums import *
 from .embeds import Embed
-from .components import Component
+from .components import Component, Button
 from .mentions import AllowedMentions
 from .shard import AutoShardedClient, ShardInfo
 from .player import *
