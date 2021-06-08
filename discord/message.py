@@ -1585,12 +1585,10 @@ class PartialMessage(Hashable):
                 fields['embed'] = embed.to_dict()
 
         try:
-            print('brah')
             components = fields['components']
         except KeyError:
             pass
         else:
-            print('compoaoaah', components)
             if components is not None:
                 fields['components'] = [component.components for component in fields['components']]
 
