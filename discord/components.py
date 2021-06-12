@@ -143,16 +143,19 @@ class Button:
         self.hash = hash
 
         
-    def success(self, response):
+    def success(self, response, content: str = None):
         """ Marks the interaction as a success.
         :param response: The response data. """
 
         url = f"https://discord.com/api/v8/interactions/{response['id']}/{response['token']}/callback"
 
+        if content is None:
+            content = "Congrats on sending your command!"
+
         json = {
             "type": 4,
             "data": {
-                "content": "Congrats on sending your command!",
+                "content": content,
                 "flags": 64
             }
         }
