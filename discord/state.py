@@ -1138,10 +1138,13 @@ class ConnectionState:
         response = {'id': data['id'], 'token': data['token'], 'application_id': data['application_id']}
         member = Member(guild=guild, data=data['member'], state=self)
 
-        message_id = int(data['message']['id'])
+        if not (message := data.get('message')):
+            return
+
+        message_id = int(message['id'])
         message = self._get_message(message_id)
         custom_id = data['data']['custom_id']
-        action_rows = data['message']['components']
+        action_rows = message['components']
 
         def get_key(custom_id):
             for action_row in action_rows:
