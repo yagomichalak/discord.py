@@ -1138,7 +1138,8 @@ class ConnectionState:
         response = {'id': data['id'], 'token': data['token'], 'application_id': data['application_id']}
         member = Member(guild=guild, data=data['member'], state=self)
 
-        if not (message := data.get('message')):
+        message = data.get('message')
+        if not message:
             return
 
         message_id = int(message['id'])
