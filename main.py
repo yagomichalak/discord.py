@@ -65,7 +65,7 @@ async def on_interaction_update(message, member, button, response):
 
 @client.event
 async def on_raw_interaction_update(payload, user, button, response):
-    # print('RAW!')
+    print('RAW!')
     # print('payload=', payload)
     # print()
     # print('user=', user)

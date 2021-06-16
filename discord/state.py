@@ -1132,22 +1132,22 @@ class ConnectionState:
     def parse_interaction_create(self, data):
 
         # rich interface here
-
+        
         guild_id = int(data['guild_id'])
         guild = self._get_guild(guild_id)
         response = {'id': data['id'], 'token': data['token'], 'application_id': data['application_id']}
         member = Member(guild=guild, data=data['member'], state=self)
 
         message = data.get('message')
+        # print(message)
         if not message:
             return
 
+        
         message_id = int(message['id'])
         message = self._get_message(message_id)
-        custom_id = data['data']['custom_id']
-        action_rows = message.get('components') if message else []
 
-        def get_key(custom_id):
+        def get_key(custom_id, action_rows):
             for action_row in action_rows:
                 for button in action_row['components']:
                     if custom_id == button['custom_id']:
@@ -1155,14 +1155,25 @@ class ConnectionState:
     
             return None
 
-        button_data = get_key(custom_id)
-        button = Button(**button_data)
 
-        if message:
+        if message is not None:
+            custom_id = data['data']['custom_id']
+            action_rows = message['components']
+
+            button_data = get_key(custom_id, action_rows)
+            button = Button(**button_data)
+
             self.dispatch('interaction_update', message, member, button, response)
         else:
             raw = RawMessageUpdateEvent(data)
             message = self._get_message(raw.message_id)
+            message = raw.data['message']
+            custom_id = data['data']['custom_id']
+
+            action_rows = message['components']
+            button_data = get_key(custom_id, action_rows)
+            button = Button(**button_data)
+
             if message:
                 self.dispatch('raw_interaction_update', message, member, button, response)
             else:
