@@ -1145,7 +1145,7 @@ class ConnectionState:
         message_id = int(message['id'])
         message = self._get_message(message_id)
         custom_id = data['data']['custom_id']
-        action_rows = message['components']
+        action_rows = message['components'] if message.get('components') else []
 
         def get_key(custom_id):
             for action_row in action_rows:
