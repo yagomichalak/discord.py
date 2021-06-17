@@ -1139,7 +1139,6 @@ class ConnectionState:
         member = Member(guild=guild, data=data['member'], state=self)
 
         message = data.get('message')
-        # print(message)
         if not message:
             return
 
@@ -1147,18 +1146,19 @@ class ConnectionState:
         message_id = int(message['id'])
         message = self._get_message(message_id)
 
-        def get_key(custom_id, action_rows):
-            for action_row in action_rows:
-                for button in action_row['components']:
-                    if custom_id == button['custom_id']:
-                        return button
-    
-            return None
-
 
         if message is not None:
             custom_id = data['data']['custom_id']
-            action_rows = message['components']
+            action_rows = message.components
+
+
+            def get_key(custom_id, action_rows):
+                for action_row in action_rows:
+                    for button in action_row.components['components']:
+                        if custom_id == button['custom_id']:
+                            return button
+        
+                return None
 
             button_data = get_key(custom_id, action_rows)
             button = Button(**button_data)
@@ -1171,6 +1171,15 @@ class ConnectionState:
             custom_id = data['data']['custom_id']
 
             action_rows = message['components']
+
+            def get_key(custom_id, action_rows):
+                for action_row in action_rows:
+                    for button in action_row['components']:
+                        if custom_id == button['custom_id']:
+                            return button
+        
+                return None
+                
             button_data = get_key(custom_id, action_rows)
             button = Button(**button_data)
 
